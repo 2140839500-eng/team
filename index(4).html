@@ -1,0 +1,932 @@
+<!DOCTYPE html>
+<html lang="zh-CN" data-page-node-id="DA0fxZrZd2G6zkIXQEjS90">
+<head data-page-node-id="GwAQ4L3qBoawUJTYLICBye">
+<meta charset="UTF-8" data-page-node-id="dhTkqej0E3ItRFgXDR19V0" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" data-page-node-id="RkQPdyFoJKiNJAFhgHHBAe" />
+<title>倒计时本 · Days Matter</title>
+<style>
+  :root {
+    --bg-1: #f7f9ff;
+    --bg-2: #e9efff;
+    --bg-3: #fdeef6;
+    --ink: #33395c;
+    --ink-soft: #8b90b5;
+    --card: #ffffff;
+    --line: #e7eaf7;
+    --accent: #7c9cf5;
+    --accent-deep: #5578d6;
+    --today: #f0869b;
+    --radius: 20px;
+    --shadow: 0 20px 44px -20px rgba(85, 100, 160, .38);
+  }
+
+  * { box-sizing: border-box; }
+
+  body {
+    margin: 0;
+    min-height: 100vh;
+    padding: 32px 16px 60px;
+    font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", "Segoe UI", system-ui, sans-serif;
+    color: var(--ink);
+    background: linear-gradient(160deg, var(--bg-1) 0%, var(--bg-2) 48%, var(--bg-3) 100%);
+    background-attachment: fixed;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .wrap { max-width: 760px; margin: 0 auto; }
+
+  /* ---------- 顶部 ---------- */
+  .hero {
+    background: var(--card);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 26px 28px 22px;
+    margin-bottom: 18px;
+  }
+
+  .hero-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+
+  h1 { margin: 0; font-size: 22px; font-weight: 700; letter-spacing: .5px; }
+
+  .sub { margin: 8px 0 0; font-size: 13px; color: var(--ink-soft); }
+
+  .btn-ghost {
+    padding: 9px 16px;
+    font-size: 13px;
+    font-family: inherit;
+    color: var(--accent-deep);
+    background: #f0f4ff;
+    border: 1px solid #dde5fb;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all .2s;
+  }
+
+  .btn-ghost:hover { background: var(--accent); color: #fff; border-color: transparent; }
+  .btn-ghost.on { background: #eafaf1; color: #2f9e6e; border-color: #d2f0e1; cursor: default; }
+
+  .banner {
+    margin-top: 16px;
+    padding: 13px 16px;
+    font-size: 14px;
+    font-weight: 600;
+    color: #a33a52;
+    background: linear-gradient(135deg, #ffe9ef, #fff2e2);
+    border: 1px solid #ffd7e1;
+    border-radius: 12px;
+  }
+
+  /* ---------- 表单 ---------- */
+  .panel {
+    background: var(--card);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 20px 22px 18px;
+    margin-bottom: 18px;
+  }
+
+  .panel.shake { animation: shake .36s ease; }
+
+  @keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    20% { transform: translateX(-6px); }
+    40% { transform: translateX(6px); }
+    60% { transform: translateX(-4px); }
+    80% { transform: translateX(4px); }
+  }
+
+  .row { display: flex; gap: 10px; flex-wrap: wrap; }
+
+  .row input[type="text"] {
+    flex: 2;
+    min-width: 180px;
+    height: 44px;
+    padding: 0 14px;
+    font-size: 14px;
+    font-family: inherit;
+    color: var(--ink);
+    background: #f8f9fe;
+    border: 1.5px solid var(--line);
+    border-radius: 11px;
+    outline: none;
+    transition: border-color .2s, box-shadow .2s;
+  }
+
+  .row input[type="date"] {
+    flex: 1.2;
+    min-width: 140px;
+    height: 44px;
+    padding: 0 12px;
+    font-size: 14px;
+    font-family: inherit;
+    color: var(--ink);
+    background: #f8f9fe;
+    border: 1.5px solid var(--line);
+    border-radius: 11px;
+    outline: none;
+    transition: border-color .2s, box-shadow .2s;
+  }
+
+  .row input:focus { background: #fff; border-color: var(--accent); box-shadow: 0 0 0 4px rgba(124, 156, 245, .15); }
+
+  .row2 { display: flex; align-items: center; gap: 12px; flex-wrap: wrap; margin-top: 12px; }
+
+  .emoji-row { display: flex; gap: 4px; flex-wrap: wrap; }
+
+  .emoji-row button {
+    width: 34px; height: 34px;
+    font-size: 17px;
+    line-height: 1;
+    background: #f6f7fd;
+    border: 1.5px solid transparent;
+    border-radius: 9px;
+    cursor: pointer;
+    transition: all .15s;
+  }
+
+  .emoji-row button:hover { background: #eceffb; }
+  .emoji-row button.active { background: #e8eeff; border-color: var(--accent); transform: scale(1.08); }
+
+  .type-row { display: flex; gap: 4px; background: #f2f4fb; border-radius: 10px; padding: 4px; }
+
+  .type-row label {
+    padding: 6px 12px;
+    font-size: 13px;
+    color: var(--ink-soft);
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all .18s;
+    user-select: none;
+  }
+
+  .type-row label.active { background: #fff; color: var(--ink); font-weight: 600; box-shadow: 0 2px 8px -4px rgba(85,100,160,.4); }
+  .type-row input { display: none; }
+
+  .btn-add {
+    margin-left: auto;
+    height: 40px;
+    padding: 0 22px;
+    font-size: 14px;
+    font-family: inherit;
+    font-weight: 600;
+    color: #fff;
+    background: linear-gradient(135deg, var(--accent), var(--accent-deep));
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: transform .15s, box-shadow .2s;
+  }
+
+  .btn-add:hover { transform: translateY(-1px); box-shadow: 0 8px 18px -8px var(--accent-deep); }
+  .btn-add:active { transform: scale(.97); }
+
+  .edit-tip {
+    margin-top: 12px;
+    font-size: 13px;
+    color: var(--accent-deep);
+    background: #eef3ff;
+    border-radius: 9px;
+    padding: 8px 12px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .edit-tip button {
+    margin-left: auto;
+    font-size: 12px;
+    font-family: inherit;
+    color: var(--ink-soft);
+    background: none;
+    border: 1px solid var(--line);
+    border-radius: 7px;
+    padding: 4px 10px;
+    cursor: pointer;
+  }
+
+  /* ---------- 筛选 ---------- */
+  .toolbar { display: flex; align-items: center; gap: 8px; margin-bottom: 14px; flex-wrap: wrap; }
+
+  .filters { display: flex; gap: 6px; }
+
+  .filters button {
+    height: 34px;
+    padding: 0 15px;
+    font-size: 13px;
+    font-family: inherit;
+    color: var(--ink-soft);
+    background: rgba(255,255,255,.72);
+    border: 1px solid transparent;
+    border-radius: 99px;
+    cursor: pointer;
+    transition: all .2s;
+  }
+
+  .filters button:hover { color: var(--accent-deep); }
+
+  .filters button.active {
+    color: #fff;
+    font-weight: 600;
+    background: linear-gradient(135deg, var(--accent), var(--accent-deep));
+    box-shadow: 0 8px 16px -10px var(--accent-deep);
+  }
+
+  .btn-clean {
+    margin-left: auto;
+    height: 34px;
+    padding: 0 14px;
+    font-size: 12px;
+    font-family: inherit;
+    color: var(--ink-soft);
+    background: rgba(255,255,255,.72);
+    border: 1px solid var(--line);
+    border-radius: 99px;
+    cursor: pointer;
+    transition: all .2s;
+  }
+
+  .btn-clean:hover:not(:disabled) { color: #d05a75; border-color: #f3c4d0; }
+  .btn-clean:disabled { opacity: .4; cursor: not-allowed; }
+
+  /* ---------- 卡片 ---------- */
+  .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 14px; }
+
+  .card {
+    position: relative;
+    background: var(--card);
+    border-radius: 16px;
+    box-shadow: 0 14px 30px -18px rgba(85, 100, 160, .45);
+    padding: 16px 16px 14px 20px;
+    overflow: hidden;
+    cursor: pointer;
+    transition: transform .18s, box-shadow .2s;
+    animation: pop .3s ease both;
+  }
+
+  @keyframes pop {
+    from { opacity: 0; transform: translateY(8px) scale(.97); }
+    to { opacity: 1; transform: translateY(0) scale(1); }
+  }
+
+  .card:hover { transform: translateY(-3px); box-shadow: 0 20px 38px -18px rgba(85, 100, 160, .55); }
+
+  .card::before {
+    content: "";
+    position: absolute;
+    left: 0; top: 0; bottom: 0;
+    width: 5px;
+    background: var(--c, var(--accent));
+  }
+
+  .card.today {
+    background: linear-gradient(160deg, #fff5f7, #fffdf6);
+    border: 1px solid #ffd9e2;
+  }
+
+  .card.today::before { background: var(--today); }
+
+  .card.leaving { animation: leave .22s ease forwards; }
+
+  @keyframes leave {
+    to { opacity: 0; transform: scale(.9); }
+  }
+
+  .card-head { display: flex; align-items: center; gap: 8px; }
+
+  .card-emoji { font-size: 20px; }
+
+  .card-title {
+    font-size: 15px;
+    font-weight: 600;
+    word-break: break-word;
+    flex: 1;
+    min-width: 0;
+  }
+
+  .btn-del {
+    flex: 0 0 auto;
+    width: 24px; height: 24px;
+    font-size: 12px;
+    line-height: 1;
+    color: var(--ink-soft);
+    background: transparent;
+    border: none;
+    border-radius: 7px;
+    cursor: pointer;
+    opacity: 0;
+    transition: opacity .18s, background .18s, color .18s, transform .15s;
+  }
+
+  .card:hover .btn-del { opacity: 1; }
+  .btn-del:hover { color: #fff; background: #e0729a; transform: rotate(90deg); }
+
+  @media (hover: none) { .btn-del { opacity: .45; } }
+
+  .big {
+    margin-top: 10px;
+    font-size: 40px;
+    font-weight: 700;
+    line-height: 1.1;
+    font-variant-numeric: tabular-nums;
+    color: var(--c, var(--accent-deep));
+  }
+
+  .card.today .big { color: var(--today); }
+
+  .big small { font-size: 14px; font-weight: 600; color: var(--ink-soft); margin-left: 4px; }
+
+  .card-meta { margin-top: 6px; font-size: 12px; color: var(--ink-soft); line-height: 1.6; }
+
+  .card-meta .badge {
+    display: inline-block;
+    padding: 1px 8px;
+    font-size: 11px;
+    border-radius: 99px;
+    background: #eef1fb;
+    color: var(--ink-soft);
+    margin-right: 5px;
+  }
+
+  .bar { margin-top: 10px; height: 5px; border-radius: 99px; background: #eef0f9; overflow: hidden; }
+
+  .bar i {
+    display: block;
+    height: 100%;
+    width: 0;
+    border-radius: 99px;
+    background: var(--c, var(--accent));
+    transition: width .4s ease;
+  }
+
+  .card.today .bar i { background: var(--today); }
+
+  /* ---------- 空状态 ---------- */
+  .empty {
+    padding: 44px 20px;
+    text-align: center;
+    color: var(--ink-soft);
+    font-size: 14px;
+    line-height: 1.8;
+    background: rgba(255,255,255,.6);
+    border-radius: var(--radius);
+  }
+
+  .empty .emoji { font-size: 34px; display: block; margin-bottom: 8px; }
+  .hidden { display: none !important; }
+
+  /* ---------- 弹层 ---------- */
+  .toast {
+    position: fixed;
+    left: 50%;
+    bottom: 40px;
+    transform: translate(-50%, 24px);
+    padding: 13px 26px;
+    font-size: 15px;
+    font-weight: 600;
+    color: #fff;
+    background: linear-gradient(135deg, var(--accent), var(--accent-deep));
+    border-radius: 99px;
+    box-shadow: 0 16px 34px -14px rgba(85, 120, 214, .7);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity .3s, transform .3s;
+    z-index: 50;
+  }
+
+  .toast.show { opacity: 1; transform: translate(-50%, 0); }
+
+  .confetti-layer { position: fixed; inset: 0; overflow: hidden; pointer-events: none; z-index: 40; }
+
+  .confetti-piece {
+    position: absolute;
+    top: -40px;
+    font-size: 18px;
+    animation: fall linear forwards;
+  }
+
+  @keyframes fall {
+    to { transform: translateY(105vh) rotate(560deg); opacity: 0; }
+  }
+</style>
+</head>
+<body data-page-node-id="jF9F9KsaMyh433dMA3D9PD">
+
+  <main class="wrap" data-page-node-id="0JuD3PtkwVNgGHxW9G1Ztj">
+    <header class="hero" data-page-node-id="Mz9RyZaMpp4bPRz5ugXlhP">
+      <div class="hero-top" data-page-node-id="El3FHEXP22V0HUMJBnOgUa">
+        <h1 data-page-node-id="OvBD3dyjRVLxQ430UFF8dh">⏰ 倒计时本</h1>
+        <button class="btn-ghost" id="notifyBtn" data-page-node-id="UEOFwtZRlsu9SNTfyrzBg4">🔔 开启当天提醒</button>
+      </div>
+      <p class="sub" id="sub" data-page-node-id="v4SODNk9SJDluCj4TYXwOb">生日、考试、纪念日……把重要的日子都记在这里</p>
+      <div class="banner hidden" id="banner" data-page-node-id="YRrnPduMlQ610dg7nIaEoN"></div>
+    </header>
+
+    <section class="panel" id="panel" data-page-node-id="gNuMIPg29zrgeLTBtSiSW7">
+      <div class="row" data-page-node-id="g9fWmrHLKHBPG2cwguxaMz">
+        <input type="text" id="name" placeholder="事件名称，如：我的生日 / 期末考试 / 出发去旅行" maxlength="30" data-page-node-id="Sh4E4Tgf98KDRHdvL0D8jt" />
+        <input type="date" id="date" data-page-node-id="XSMjRw6aBCF7xYlWsTRToD" />
+      </div>
+      <div class="row2" data-page-node-id="9zGGdR8wHX7jgAtBifQeNe">
+        <div class="emoji-row" id="emojiRow" data-page-node-id="TK24Ve7w7cgEhVYA0w3guH"></div>
+        <div class="type-row" id="typeRow" data-page-node-id="NJfXCcbCScv4lRnObdeKdV">
+          <label data-v="once" class="active" data-page-node-id="CAcyoVOgHhKFeH0uTywVwh"><input type="radio" name="etype" value="once" checked data-page-node-id="2ylHekilnxFwnfJGr0KmFj" />一次性</label>
+          <label data-v="yearly" data-page-node-id="IbctCyBmFl9xJtI8bZGGLG"><input type="radio" name="etype" value="yearly" data-page-node-id="ZY1GMY5FLJk7xbqJzYxmCO" />每年纪念日</label>
+        </div>
+        <button class="btn-add" id="addBtn" data-page-node-id="BFKKRyhQtoZ6CCYRq4HIVz">添加</button>
+      </div>
+      <div class="edit-tip hidden" id="editTip" data-page-node-id="PZUq2lmpmxah4KUiz8BzOM">
+        <span data-page-node-id="kyafsFNrGk0HHWY57k3Njm">正在编辑「<b id="editName" data-page-node-id="2VGoZ06t0Y1aG8XNFNYDcC"></b>」</span>
+        <button id="cancelEdit" type="button" data-page-node-id="5zNNh2xYcMCW3KztHvyl6y">取消编辑</button>
+      </div>
+    </section>
+
+    <div class="toolbar" data-page-node-id="CWBQNCy9WJjJe9hEkT29xe">
+      <nav class="filters" id="filters" data-page-node-id="u3X8X9sSJ1h93EG7YdcWN4">
+        <button data-f="all" class="active" data-page-node-id="GQ4HC9YJLkdUC5SHGZ4bcB">全部</button>
+        <button data-f="once" data-page-node-id="zwNyq3p6ocHjfeqXT6Am26">倒计时</button>
+        <button data-f="yearly" data-page-node-id="tAoExLhO0eTDXP3Zb8BM5K">纪念日</button>
+      </nav>
+      <button class="btn-clean" id="cleanBtn" disabled data-page-node-id="vGCYbtE7CjJOHyubLaN7MK">清除已过期</button>
+    </div>
+
+    <section class="grid" id="grid" data-page-node-id="OYIiUdevo3Tlj8hecYHwZI"></section>
+    <div class="empty hidden" id="empty" data-page-node-id="mrUMG4tSCwr0hTlY4Xzuax"><span class="emoji" data-page-node-id="D2kr3YJmEEeujSGrH2P2SG">🌱</span><span id="emptyText" data-page-node-id="MechbZNblBMC0WdNxO5Cbo"></span></div>
+  </main>
+
+  <div class="toast" id="toast" data-page-node-id="oWgQiGAHOB3cfCbc7BGTWN"></div>
+  <div class="confetti-layer" id="confettiLayer" data-page-node-id="8KXFREGHaxzGegDq36ADVE"></div>
+
+  <script>
+  (function () {
+    'use strict';
+
+    var STORE_KEY = 'days_matter_events_v1';
+
+    var EMOJIS = ['🎯', '🎂', '❤️', '🎓', '✈️', '🏠', '💍', '📚', '🎄', '🏆', '👶', '🎁'];
+    var COLORS = ['#7c9cf5', '#f5a3c0', '#8fd3b6', '#f0b76a', '#b39df0', '#7fc8e8'];
+
+    var nameInput = document.getElementById('name');
+    var dateInput = document.getElementById('date');
+    var emojiRow = document.getElementById('emojiRow');
+    var typeRow = document.getElementById('typeRow');
+    var addBtn = document.getElementById('addBtn');
+    var panel = document.getElementById('panel');
+    var grid = document.getElementById('grid');
+    var empty = document.getElementById('empty');
+    var emptyText = document.getElementById('emptyText');
+    var filtersEl = document.getElementById('filters');
+    var cleanBtn = document.getElementById('cleanBtn');
+    var banner = document.getElementById('banner');
+    var notifyBtn = document.getElementById('notifyBtn');
+    var sub = document.getElementById('sub');
+    var toast = document.getElementById('toast');
+    var confettiLayer = document.getElementById('confettiLayer');
+    var editTip = document.getElementById('editTip');
+    var editName = document.getElementById('editName');
+    var cancelEdit = document.getElementById('cancelEdit');
+
+    var events = [];
+    var filter = 'all';
+    var pickedEmoji = '🎯';
+    var editingId = null;
+    var timerId = null;
+
+    /* ---------- 日期工具 ---------- */
+    function startOfDay(d) { return new Date(d.getFullYear(), d.getMonth(), d.getDate()); }
+
+    function parseDate(s) {
+      var p = s.split('-');
+      return new Date(Number(p[0]), Number(p[1]) - 1, Number(p[2]));
+    }
+
+    function daysBetween(a, b) {
+      return Math.round((startOfDay(b) - startOfDay(a)) / 86400000);
+    }
+
+    function fmtDate(d) {
+      return (d.getMonth() + 1) + '月' + d.getDate() + '日';
+    }
+
+    function fmtFull(s) {
+      var d = parseDate(s);
+      return d.getFullYear() + '年' + (d.getMonth() + 1) + '月' + d.getDate() + '日';
+    }
+
+    /* ---------- 存取 ---------- */
+    function load() {
+      try {
+        var raw = localStorage.getItem(STORE_KEY);
+        if (!raw) return [];
+        var data = JSON.parse(raw);
+        if (!Array.isArray(data)) return [];
+        return data.filter(function (e) {
+          return e && typeof e.name === 'string' && /^\d{4}-\d{2}-\d{2}$/.test(e.date || '');
+        });
+      } catch (err) { return []; }
+    }
+
+    function save() {
+      try { localStorage.setItem(STORE_KEY, JSON.stringify(events)); } catch (err) { /* 忽略 */ }
+    }
+
+    /* ---------- 事件计算 ---------- */
+    function isToday(e, now) {
+      var t = parseDate(e.date);
+      if (e.type === 'yearly') return t.getMonth() === now.getMonth() && t.getDate() === now.getDate();
+      return daysBetween(now, t) === 0;
+    }
+
+    function nextOccur(e, now) {
+      var t = parseDate(e.date);
+      if (e.type !== 'yearly') return t;
+      var c = new Date(now.getFullYear(), t.getMonth(), t.getDate());
+      if (daysBetween(now, c) < 0) c = new Date(now.getFullYear() + 1, t.getMonth(), t.getDate());
+      return c;
+    }
+
+    function calc(e, now) {
+      var t = parseDate(e.date);
+      var info = { target: t, today: isToday(e, now) };
+      if (e.type === 'yearly') {
+        var next = nextOccur(e, now);
+        var prev = new Date(next.getFullYear() - 1, next.getMonth(), next.getDate());
+        info.daysToNext = daysBetween(now, next);
+        info.already = Math.max(0, daysBetween(t, now));
+        info.progress = info.daysToNext === 0 ? 1
+          : Math.max(0, Math.min(1, daysBetween(prev, now) / daysBetween(prev, next)));
+        info.sortKey = next.getTime();
+        info.dateText = '每年 ' + fmtDate(t) + ' · 已 ' + info.already + ' 天';
+      } else {
+        info.daysLeft = daysBetween(now, t);
+        info.past = info.daysLeft < 0;
+        var span = t.getTime() - (e.createdAt || now.getTime());
+        info.progress = info.daysLeft <= 0 ? 1
+          : Math.max(0, Math.min(1, (now.getTime() - (e.createdAt || now.getTime())) / (span || 1)));
+        info.sortKey = info.past ? t.getTime() + 1e15 : t.getTime();
+        info.dateText = fmtFull(e.date) + (info.past ? ' · 已过' : '');
+      }
+      return info;
+    }
+
+    /* ---------- 渲染 ---------- */
+    function visible() {
+      return events
+        .map(function (e) { return { e: e, info: calc(e, new Date()) }; })
+        .filter(function (o) { return filter === 'all' || o.e.type === filter; })
+        .sort(function (a, b) { return a.info.sortKey - b.info.sortKey; });
+    }
+
+    function render() {
+      var now = new Date();
+      var items = visible();
+      grid.innerHTML = '';
+      var expired = 0;
+
+      items.forEach(function (o) {
+        if (o.e.type === 'once' && o.info.past) expired++;
+        grid.appendChild(buildCard(o.e, o.info));
+      });
+
+      events.forEach(function (e) {
+        if (e.type === 'once' && calc(e, now).past) expired++;
+      });
+
+      if (items.length === 0) {
+        empty.classList.remove('hidden');
+        emptyText.textContent = events.length === 0
+          ? '还没有记录，添加第一个重要的日子吧'
+          : '这个分类下还没有记录';
+      } else {
+        empty.classList.add('hidden');
+      }
+
+      cleanBtn.disabled = expired === 0;
+      renderSub(now);
+    }
+
+    function renderSub(now) {
+      var upcoming = events
+        .map(function (e) { return { e: e, info: calc(e, now) }; })
+        .filter(function (o) { return !o.info.past; })
+        .sort(function (a, b) { return a.info.sortKey - b.info.sortKey; });
+
+      if (events.length === 0) { sub.textContent = '生日、考试、纪念日……把重要的日子都记在这里'; return; }
+
+      var todayCount = upcoming.filter(function (o) { return o.info.today; }).length;
+      if (todayCount > 0) {
+        sub.textContent = '今天有 ' + todayCount + ' 个重要的日子！🎉';
+        return;
+      }
+      if (upcoming.length === 0) { sub.textContent = '共 ' + events.length + ' 个记录'; return; }
+      var n = upcoming[0];
+      sub.textContent = '最近的：「' + n.e.name + '」还有 ' +
+        (n.e.type === 'yearly' ? n.info.daysToNext : n.info.daysLeft) + ' 天';
+    }
+
+    function buildCard(e, info) {
+      var li = document.createElement('article');
+      li.className = 'card' + (info.today ? ' today' : '');
+      li.style.setProperty('--c', e.color || '#7c9cf5');
+      li.title = '点击编辑这条记录';
+
+      var head = document.createElement('div');
+      head.className = 'card-head';
+
+      var em = document.createElement('span');
+      em.className = 'card-emoji';
+      em.textContent = e.emoji || '🎯';
+
+      var title = document.createElement('div');
+      title.className = 'card-title';
+      title.textContent = e.name;
+
+      var del = document.createElement('button');
+      del.className = 'btn-del';
+      del.type = 'button';
+      del.textContent = '✕';
+      del.title = '删除';
+      del.addEventListener('click', function (ev) { ev.stopPropagation(); remove(e.id, li); });
+
+      head.appendChild(em);
+      head.appendChild(title);
+      head.appendChild(del);
+
+      var big = document.createElement('div');
+      big.className = 'big';
+      if (info.today) {
+        big.textContent = e.type === 'yearly' ? '周年快乐' : '就是今天';
+      } else if (e.type === 'yearly') {
+        big.innerHTML = info.daysToNext + '<small>天后周年</small>';
+      } else if (info.past) {
+        big.innerHTML = (-info.daysLeft) + '<small>天前</small>';
+      } else {
+        big.innerHTML = info.daysLeft + '<small>天后</small>';
+      }
+
+      var meta = document.createElement('div');
+      meta.className = 'card-meta';
+      var badge = document.createElement('span');
+      badge.className = 'badge';
+      badge.textContent = e.type === 'yearly' ? '纪念日' : '倒计时';
+      meta.appendChild(badge);
+      meta.appendChild(document.createTextNode(info.dateText));
+
+      var bar = document.createElement('div');
+      bar.className = 'bar';
+      var fill = document.createElement('i');
+      fill.style.width = Math.round(info.progress * 100) + '%';
+      bar.appendChild(fill);
+
+      li.appendChild(head);
+      li.appendChild(big);
+      li.appendChild(meta);
+      li.appendChild(bar);
+
+      li.addEventListener('click', function () { startEdit(e.id); });
+      return li;
+    }
+
+    /* ---------- 表单 ---------- */
+    function buildEmojiRow() {
+      EMOJIS.forEach(function (em, i) {
+        var b = document.createElement('button');
+        b.type = 'button';
+        b.textContent = em;
+        if (em === pickedEmoji) b.classList.add('active');
+        b.addEventListener('click', function () {
+          pickedEmoji = em;
+          Array.prototype.forEach.call(emojiRow.children, function (c) {
+            c.classList.toggle('active', c === b);
+          });
+        });
+        emojiRow.appendChild(b);
+      });
+    }
+
+    function pickedType() {
+      var checked = typeRow.querySelector('input:checked');
+      return checked ? checked.value : 'once';
+    }
+
+    function setType(v) {
+      Array.prototype.forEach.call(typeRow.querySelectorAll('label'), function (l) {
+        l.classList.toggle('active', l.dataset.v === v);
+        l.querySelector('input').checked = l.dataset.v === v;
+      });
+    }
+
+    function shakeForm() {
+      panel.classList.remove('shake');
+      void panel.offsetWidth;
+      panel.classList.add('shake');
+    }
+
+    function submit() {
+      var name = nameInput.value.trim();
+      var date = dateInput.value;
+      if (!name) { toastMsg('先给事件起个名字吧'); shakeForm(); nameInput.focus(); return; }
+      if (!date) { toastMsg('选一个日期'); shakeForm(); dateInput.focus(); return; }
+
+      if (editingId) {
+        events = events.map(function (e) {
+          return e.id === editingId
+            ? { id: e.id, name: name, date: date, type: pickedType(), emoji: pickedEmoji, color: e.color, createdAt: e.createdAt }
+            : e;
+        });
+        toastMsg('已修改');
+        exitEdit();
+      } else {
+        events.push({
+          id: String(Date.now()) + Math.random().toString(36).slice(2, 7),
+          name: name,
+          date: date,
+          type: pickedType(),
+          emoji: pickedEmoji,
+          color: COLORS[events.length % COLORS.length],
+          createdAt: Date.now()
+        });
+        toastMsg('已添加「' + name + '」');
+      }
+
+      save();
+      nameInput.value = '';
+      render();
+      checkReminders(true);
+    }
+
+    /* ---------- 编辑 / 删除 ---------- */
+    function startEdit(id) {
+      var e = null;
+      events.forEach(function (x) { if (x.id === id) e = x; });
+      if (!e) return;
+      editingId = id;
+      nameInput.value = e.name;
+      dateInput.value = e.date;
+      pickedEmoji = e.emoji || '🎯';
+      Array.prototype.forEach.call(emojiRow.children, function (c, i) {
+        c.classList.toggle('active', EMOJIS[i] === pickedEmoji);
+      });
+      setType(e.type);
+      editName.textContent = e.name;
+      editTip.classList.remove('hidden');
+      addBtn.textContent = '保存修改';
+      nameInput.focus();
+      panel.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }
+
+    function exitEdit() {
+      editingId = null;
+      editTip.classList.add('hidden');
+      addBtn.textContent = '添加';
+    }
+
+    function remove(id, cardEl) {
+      if (editingId === id) exitEdit();
+      if (cardEl) cardEl.classList.add('leaving');
+      events = events.filter(function (e) { return e.id !== id; });
+      save();
+      setTimeout(render, cardEl ? 200 : 0);
+    }
+
+    function cleanExpired() {
+      var now = new Date();
+      var gone = events.filter(function (e) {
+        return e.type === 'once' && calc(e, now).past;
+      });
+      if (gone.length === 0) return;
+      if (!window.confirm('确定要清除 ' + gone.length + ' 条已过期的倒计时吗？')) return;
+      var ids = gone.map(function (e) { return e.id; });
+      events = events.filter(function (e) { return ids.indexOf(e.id) < 0; });
+      save();
+      render();
+      toastMsg('已清除 ' + gone.length + ' 条过期记录');
+    }
+
+    /* ---------- 当天提醒 ---------- */
+    function todayKey() {
+      var d = new Date();
+      return d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate();
+    }
+
+    function showBanner(list) {
+      banner.textContent = '🎉 今天：' + list.map(function (o) { return '「' + o.e.name + '」'; }).join('、');
+      banner.classList.remove('hidden');
+    }
+
+    function confetti() {
+      var pieces = ['🎉', '✨', '💜', '⭐', '🎊', '🎈'];
+      for (var i = 0; i < 26; i++) {
+        (function (i) {
+          var span = document.createElement('span');
+          span.className = 'confetti-piece';
+          span.textContent = pieces[Math.floor(Math.random() * pieces.length)];
+          span.style.left = Math.random() * 100 + 'vw';
+          span.style.fontSize = (14 + Math.random() * 14) + 'px';
+          span.style.animationDuration = (2 + Math.random() * 1.6) + 's';
+          span.style.animationDelay = (Math.random() * 0.6) + 's';
+          confettiLayer.appendChild(span);
+          setTimeout(function () {
+            if (span.parentNode) span.parentNode.removeChild(span);
+          }, 4600);
+        })(i);
+      }
+    }
+
+    function checkReminders(allowConfetti) {
+      var now = new Date();
+      var list = events
+        .map(function (e) { return { e: e, info: calc(e, now) }; })
+        .filter(function (o) { return o.info.today; });
+
+      if (list.length === 0) { banner.classList.add('hidden'); return; }
+
+      showBanner(list);
+      if (allowConfetti) confetti();
+
+      /* 浏览器通知：每天每条只提醒一次 */
+      if ('Notification' in window && Notification.permission === 'granted') {
+        var key = 'days_matter_notified_' + todayKey();
+        var done = [];
+        try { done = JSON.parse(localStorage.getItem(key) || '[]'); } catch (err) { done = []; }
+        if (!Array.isArray(done)) done = [];
+        list.forEach(function (o) {
+          if (done.indexOf(o.e.id) >= 0) return;
+          try {
+            new Notification('⏰ 今天是「' + o.e.name + '」', {
+              body: o.e.type === 'yearly' ? '周年纪念日快乐！' : '你倒数的日子到了！',
+              tag: o.e.id
+            });
+            done.push(o.e.id);
+          } catch (err) { /* 忽略 */ }
+        });
+        try { localStorage.setItem(key, JSON.stringify(done)); } catch (err) { /* 忽略 */ }
+      }
+    }
+
+    function syncNotifyBtn() {
+      if (!('Notification' in window)) {
+        notifyBtn.textContent = '🔔 此浏览器不支持提醒';
+        notifyBtn.classList.add('on');
+        notifyBtn.disabled = true;
+        return;
+      }
+      if (Notification.permission === 'granted') {
+        notifyBtn.textContent = '🔔 当天提醒已开启';
+        notifyBtn.classList.add('on');
+      } else if (Notification.permission === 'denied') {
+        notifyBtn.textContent = '🔔 提醒被浏览器拦截';
+      }
+    }
+
+    notifyBtn.addEventListener('click', function () {
+      if (!('Notification' in window)) return;
+      if (Notification.permission === 'granted') { toastMsg('提醒已经是开启状态'); return; }
+      Notification.requestPermission().then(function (p) {
+        syncNotifyBtn();
+        if (p === 'granted') {
+          toastMsg('好嘞，重要日子当天会提醒你');
+          try { new Notification('🔔 提醒已开启', { body: '重要日子当天见！' }); } catch (err) { /* 忽略 */ }
+          checkReminders(true);
+        }
+      });
+    });
+
+    /* ---------- 小工具 ---------- */
+    function toastMsg(msg) {
+      toast.textContent = msg;
+      toast.classList.add('show');
+      setTimeout(function () { toast.classList.remove('show'); }, 2200);
+    }
+
+    /* ---------- 事件绑定 ---------- */
+    addBtn.addEventListener('click', submit);
+    nameInput.addEventListener('keydown', function (e) { if (e.key === 'Enter') submit(); });
+    cleanBtn.addEventListener('click', cleanExpired);
+    cancelEdit.addEventListener('click', function () { exitEdit(); nameInput.value = ''; });
+
+    filtersEl.addEventListener('click', function (e) {
+      var btn = e.target.closest('button');
+      if (!btn || !btn.dataset.f) return;
+      filter = btn.dataset.f;
+      Array.prototype.forEach.call(filtersEl.querySelectorAll('button'), function (b) {
+        b.classList.toggle('active', b === btn);
+      });
+      render();
+    });
+
+    typeRow.addEventListener('click', function (e) {
+      var label = e.target.closest('label');
+      if (label) setType(label.dataset.v);
+    });
+
+    /* ---------- 启动 ---------- */
+    events = load();
+    buildEmojiRow();
+    render();
+    syncNotifyBtn();
+    checkReminders(true);
+    timerId = setInterval(function () { checkReminders(false); }, 60000);
+  })();
+  </script>
+</body>
+</html>
